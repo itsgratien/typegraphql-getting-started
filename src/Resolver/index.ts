@@ -26,6 +26,22 @@ export class RecipeResolver {
     }
   }
 
+  @Mutation(() => Types.Recipe)
+  async updateRecipe(@Args() value: Types.TUpdateArgs) {
+    try {
+      const update = await recipeModel.findOneAndUpdate(
+        { _id: value.id },
+        {
+          $set: { name: value.name, updatedAt: Date.now() },
+        },
+        { new: true }
+      );
+      return this.manageRecipe(update);
+    } catch (error) {
+      throw new ApolloError(error.message);
+    }
+  }
+
   @Mutation((returns) => Types.TDeleteRecipeResponse)
   async deleteRecipe(
     @Args() { id }: Types.TDeleteArgs

@@ -32,3 +32,12 @@ export class TDeleteArgs {
   @Field()
   id: string;
 }
+
+@ArgsType()
+export class TUpdateArgs {
+  @Field()
+  id: string;
+
+  @Field()
+  name: string;
+}

@@ -11,5 +11,3 @@ export class Recipe {
 }
 
 export const recipeModel = getModelForClass(Recipe);
-
-export type TRecipeModel = ReturnModelType<typeof Recipe>;
