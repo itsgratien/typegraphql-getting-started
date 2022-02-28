@@ -10,6 +10,14 @@
     "skipLibCheck": true /* Skip type checking all .d.ts files. */,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "lib": ["es2018", "esnext.asynciterable"]
+    "lib": ["es2018", "esnext.asynciterable"],
+    "baseUrl": ".",
+    "paths": {
+      "@src/*": ["./src/*"],
+      "@config/*": ["./src/Config/*"],
+      "@resolver/*": ["./src/Resolver/*"],
+      "@model/*": ["./src/Model/*"],
+      "@generated/*": ["./src/Types/*"]
+    }
   }
 }

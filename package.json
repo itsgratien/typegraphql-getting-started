@@ -11,15 +11,27 @@
   },
   "dependencies": {
     "@graphql-tools/schema": "^8.3.2",
-    "apollo-server": "^3.6.3",
+    "apollo-server-core": "^3.6.3",
+    "apollo-server-express": "^3.6.3",
     "class-validator": "^0.13.2",
+    "express": "^4.17.3",
     "graphql": "^15.3.0",
+    "module-alias": "^2.2.2",
+    "mongoose": "^6.2.3",
     "reflect-metadata": "^0.1.13",
     "ts-node": "^10.5.0",
     "type-graphql": "^1.1.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.15",
+    "prettier": "^2.5.1",
     "typescript": "^4.5.5"
+  },
+  "_moduleAliases": {
+    "@src": ".",
+    "@config": "./src/Config",
+    "@resolver": "./src/Resolver",
+    "@model": "./src/Model",
+    "@generated": "./src/Types"
   }
 }
