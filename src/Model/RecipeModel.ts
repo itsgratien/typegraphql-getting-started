@@ -1,17 +1,15 @@
-import mongoose from "mongoose";
-import * as Types from "@src/Types";
+import { getModelForClass, prop, ReturnModelType } from '@typegoose/typegoose';
+export class Recipe {
+  @prop({ required: true })
+  public name: string;
 
-const RecipeSchema = new mongoose.Schema<Types.TRecipeModel>(
-  {
-    name: {
-      type: String,
-      required: true,
-    },
-  },
-  { timestamps: true }
-);
+  @prop({ required: true, default: Date.now() })
+  public createdAt: string;
 
-export const recipeModel = mongoose.model<Types.TRecipeModel>(
-  "Recipe",
-  RecipeSchema
-);
+  @prop({ required: true, default: Date.now() })
+  public updatedAt: string;
+}
+
+export const recipeModel = getModelForClass(Recipe);
+
+export type TRecipeModel = ReturnModelType<typeof Recipe>;

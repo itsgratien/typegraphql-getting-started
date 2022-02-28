@@ -1,19 +1,4 @@
-import mongoose from 'mongoose';
-import { ObjectType, Field } from 'type-graphql';
-
-export interface TRecipeModel extends TRecipe {
-  _id: mongoose.Types.ObjectId;
-}
-
-export interface TRecipe {
-  name: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface TRecipeResponse extends TRecipe {
-  id: string;
-}
+import { ObjectType, Field, ArgsType } from 'type-graphql';
 
 @ObjectType()
 export class Recipe {
@@ -21,5 +6,29 @@ export class Recipe {
   name: string;
 
   @Field()
-  _id: string;
+  id: string;
+
+  @Field()
+  createdAt: string;
+
+  @Field()
+  updatedAt: string;
+}
+
+@ArgsType()
+export class TAddRecipeArgs {
+  @Field()
+  name: string;
+}
+
+@ObjectType()
+export class TDeleteRecipeResponse {
+  @Field()
+  message: string;
+}
+
+@ArgsType()
+export class TDeleteArgs {
+  @Field()
+  id: string;
 }
