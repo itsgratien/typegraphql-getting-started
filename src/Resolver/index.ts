@@ -18,7 +18,7 @@ export class RecipeResolver {
         select: '_id username createdAt updatedAt',
       });
       return find.map((item) => this.manageRecipe(item));
-    } catch (error) {
+    } catch (error: any) {
       throw new ApolloError(error.message);
     }
   }
@@ -42,7 +42,7 @@ export class RecipeResolver {
         createdAt: d.createdAt,
         updatedAt: d.updatedAt,
       };
-    } catch (error) {
+    } catch (error: any) {
       throw new ApolloError(error.message);
     }
   }
@@ -62,7 +62,7 @@ export class RecipeResolver {
         { new: true }
       );
       return this.manageRecipe(update);
-    } catch (error) {
+    } catch (error: any) {
       throw new ApolloError(error.message);
     }
   }
@@ -78,7 +78,7 @@ export class RecipeResolver {
       return {
         message: 'Deleted',
       };
-    } catch (error) {
+    } catch (error: any) {
       throw new ApolloError(error.message);
     }
   }
@@ -121,7 +121,7 @@ export class RecipeResolver {
         },
         token,
       };
-    } catch (error) {
+    } catch (error: any) {
       throw new ApolloError(error.message);
     }
   }
