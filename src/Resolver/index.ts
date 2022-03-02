@@ -10,9 +10,13 @@ import { environment } from '@config/index';
 export class RecipeResolver {
   @Authorized()
   @Query((returns) => [Types.Recipe])
-  async getRecipes(@Ctx() ctx: Types.TContextType): Promise<Types.Recipe[]> {
+  async getRecipes(): Promise<Types.Recipe[]> {
     try {
-      const find = await recipeModel.find({});
+      const find = await recipeModel.find({}).populate({
+        model: userModel,
+        path: 'owner',
+        select: '_id username createdAt updatedAt',
+      });
       return find.map((item) => this.manageRecipe(item));
     } catch (error) {
       throw new ApolloError(error.message);
@@ -21,10 +25,23 @@ export class RecipeResolver {
 
   @Authorized()
   @Mutation(() => Types.Recipe)
-  async addRecipe(@Args() values: Types.TAddRecipeArgs): Promise<Types.Recipe> {
+  async addRecipe(
+    @Args() values: Types.TAddRecipeArgs,
+    @Ctx() ctx: Types.TContextType
+  ): Promise<Types.Recipe> {
     try {
-      const create = await recipeModel.create(values);
-      return this.manageRecipe(create);
+      const create = await recipeModel.create({
+        name: values.name,
+        owner: ctx.user.id,
+      });
+      const d = this.manageRecipe(create);
+
+      return {
+        id: d.id,
+        name: d.name,
+        createdAt: d.createdAt,
+        updatedAt: d.updatedAt,
+      };
     } catch (error) {
       throw new ApolloError(error.message);
     }
@@ -32,10 +49,13 @@ export class RecipeResolver {
 
   @Authorized()
   @Mutation(() => Types.Recipe)
-  async updateRecipe(@Args() value: Types.TUpdateArgs) {
+  async updateRecipe(
+    @Args() value: Types.TUpdateArgs,
+    @Ctx() ctx: Types.TContextType
+  ) {
     try {
       const update = await recipeModel.findOneAndUpdate(
-        { _id: value.id },
+        { $and: [{ _id: value.id }, { owner: ctx.user.id }] },
         {
           $set: { name: value.name, updatedAt: Date.now() },
         },
@@ -46,14 +66,15 @@ export class RecipeResolver {
       throw new ApolloError(error.message);
     }
   }
-  
+
   @Authorized()
   @Mutation((returns) => Types.TDeleteRecipeResponse)
   async deleteRecipe(
-    @Args() { id }: Types.TDeleteArgs
+    @Args() { id }: Types.TDeleteArgs,
+    @Ctx() ctx: Types.TContextType
   ): Promise<Types.TDeleteRecipeResponse> {
     try {
-      await recipeModel.deleteOne({ _id: id });
+      await recipeModel.deleteOne({ _id: id, owner: ctx.user.id });
       return {
         message: 'Deleted',
       };
@@ -68,6 +89,15 @@ export class RecipeResolver {
       name: values.name,
       createdAt: values.createdAt,
       updatedAt: values.updatedAt,
+      owner:
+        typeof values.owner === 'object'
+          ? {
+              username: values.owner.username,
+              createdAt: values.owner.createdAt,
+              updatedAt: values.owner.updatedAt,
+              id: 'id',
+            }
+          : undefined,
     };
   }
 

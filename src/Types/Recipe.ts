@@ -1,4 +1,5 @@
 import { ObjectType, Field, ArgsType } from 'type-graphql';
+import { TUser } from '.';
 
 @ObjectType()
 export class Recipe {
@@ -13,6 +14,9 @@ export class Recipe {
 
   @Field()
   updatedAt: string;
+
+  @Field((type) => TUser, { nullable: true })
+  owner?: TUser;
 }
 
 @ArgsType()
