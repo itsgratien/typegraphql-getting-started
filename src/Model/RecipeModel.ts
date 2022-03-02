@@ -1,4 +1,4 @@
-import { getModelForClass, prop, ReturnModelType } from '@typegoose/typegoose';
+import { getModelForClass, prop } from '@typegoose/typegoose';
 export class Recipe {
   @prop({ required: true })
   public name: string;

@@ -3,7 +3,7 @@ import 'module-alias/register';
 import { ApolloServer } from 'apollo-server-express';
 import express from 'express';
 import { buildSchema } from 'type-graphql';
-import { dbConnect } from '@config/index';
+import { dbConnect, createUser } from '@config/index';
 import { RecipeResolver } from '@resolver/index';
 import http from 'http';
 import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
@@ -25,6 +25,8 @@ const start = async () => {
   apolloServer.applyMiddleware({ app });
 
   await dbConnect();
+
+  // await createUser();
 
   await new Promise<void>((resolve) =>
     httpServer.listen({ port: 4000 }, resolve)

@@ -1,8 +1,10 @@
 import { Resolver, Query, Mutation, Args } from 'type-graphql';
-import { Recipe as RecipeModel, recipeModel } from '@model/index';
+import { Recipe as RecipeModel, recipeModel, userModel } from '@model/index';
 import * as Types from '@generated/index';
 import { ApolloError } from 'apollo-server-express';
 import { DocumentType } from '@typegoose/typegoose';
+import jwt from 'jsonwebtoken';
+import { environment } from '@config/index';
 
 @Resolver()
 export class RecipeResolver {
@@ -63,5 +65,30 @@ export class RecipeResolver {
       createdAt: values.createdAt,
       updatedAt: values.updatedAt,
     };
+  }
+
+  @Mutation((returns) => Types.TLoginResponse)
+  async login(@Args() values: Types.TLoginArgs): Promise<Types.TLoginResponse> {
+    try {
+      const find = await userModel.findOne({ username: values.username });
+
+      if (!find) {
+        throw new ApolloError('Incorrect username');
+      }
+
+      const token = jwt.sign({ id: find._id }, environment.secretKey);
+
+      return {
+        data: {
+          id: find._id,
+          username: find.username,
+          createdAt: find.createdAt,
+          updatedAt: find.updatedAt,
+        },
+        token,
+      };
+    } catch (error) {
+      throw new ApolloError(error.message);
+    }
   }
 }
