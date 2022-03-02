@@ -1,4 +1,5 @@
 import { ObjectType, ArgsType, Field } from 'type-graphql';
+import { Request, Response } from 'express';
 
 @ArgsType()
 export class TLoginArgs {
@@ -28,4 +29,17 @@ export class TLoginResponse {
 
   @Field()
   token: string;
+}
+
+export interface TContextType {
+  req: Request;
+  res: Response;
+  user: User;
+}
+
+export interface User {
+  id: string;
+  username: string;
+  createdAt: string;
+  updatedAt: string;
 }

@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args } from 'type-graphql';
+import { Resolver, Query, Mutation, Args, Authorized, Ctx } from 'type-graphql';
 import { Recipe as RecipeModel, recipeModel, userModel } from '@model/index';
 import * as Types from '@generated/index';
 import { ApolloError } from 'apollo-server-express';
@@ -8,8 +8,9 @@ import { environment } from '@config/index';
 
 @Resolver()
 export class RecipeResolver {
+  @Authorized()
   @Query((returns) => [Types.Recipe])
-  async getRecipes(): Promise<Types.Recipe[]> {
+  async getRecipes(@Ctx() ctx: Types.TContextType): Promise<Types.Recipe[]> {
     try {
       const find = await recipeModel.find({});
       return find.map((item) => this.manageRecipe(item));
@@ -18,6 +19,7 @@ export class RecipeResolver {
     }
   }
 
+  @Authorized()
   @Mutation(() => Types.Recipe)
   async addRecipe(@Args() values: Types.TAddRecipeArgs): Promise<Types.Recipe> {
     try {
@@ -28,6 +30,7 @@ export class RecipeResolver {
     }
   }
 
+  @Authorized()
   @Mutation(() => Types.Recipe)
   async updateRecipe(@Args() value: Types.TUpdateArgs) {
     try {
@@ -43,7 +46,8 @@ export class RecipeResolver {
       throw new ApolloError(error.message);
     }
   }
-
+  
+  @Authorized()
   @Mutation((returns) => Types.TDeleteRecipeResponse)
   async deleteRecipe(
     @Args() { id }: Types.TDeleteArgs
